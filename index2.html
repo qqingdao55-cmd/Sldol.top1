@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Employment Contract — Multi language</title>
+<link rel="shortcut icon" href="logo.png/logo..jpg" type="image/x-icon">
+<link rel="stylesheet" href="index.css">
+<link rel="stylesheet" href="index.java">
+<style>
+  /* Starry background */
+  :root{--bg:#000;--panel:#111;--muted:#9a9a9a;--accent:#0af}
+  html,body{height:100%;margin:0}
+  body{
+    background: radial-gradient(ellipse at bottom, #05050a 0%, #000 60%);
+    color:#fff;font-family:Arial,Helvetica,sans-serif;
+    -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+    padding:28px;
+  }
+  /* small stars */
+  body::before{
+    content:"";position:fixed;left:0;top:0;width:100%;height:100%;
+    background-image:
+      radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.6) 50%, transparent 51%),
+      radial-gradient(1px 1px at 30% 40%, rgba(255,255,255,0.35) 50%, transparent 51%),
+      radial-gradient(1px 1px at 70% 60%, rgba(255,255,255,0.25) 50%, transparent 51%),
+      radial-gradient(1px 1px at 85% 25%, rgba(255,255,255,0.18) 50%, transparent 51%);
+    background-size: 1200px 800px;
+    pointer-events:none;opacity:0.7;
+  }
+
+  /* Loader */
+  .loader-wrap{position:fixed;right:18px;bottom:18px;z-index:50}
+  .loader{width:46px;height:46px;border-radius:50%;border:4px solid rgba(255,255,255,0.08);border-top-color:var(--accent);animation:spin 1s linear infinite;box-shadow:0 2px 10px rgba(0,0,0,0.6)}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* Page container */
+  .container{max-width:960px;margin:24px auto;background:linear-gradient(180deg,#0d0d0d 0%, #131313 100%);padding:26px;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,0.6)}
+  .logo{display:block;margin:0 auto 12px auto;width:160px;height:auto}
+  h1{font-size:26px;text-align:center;margin:6px 0 18px}
+  .lang-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}
+  .lang-row .select-wrap{margin-left:auto}
+  select{background:#0b0b0b;color:#fff;padding:8px;border-radius:6px;border:1px solid #222}
+  .fill-section{background:#0f0f10;padding:16px;border-radius:10px;display:block}
+  label{display:block;margin-top:10px;font-weight:700;color:#ddd}
+  input[type="text"], input[type="date"], input[type="number"]{display:block;padding:9px;border-radius:8px;border:none;width:100%;max-width:360px;margin-top:6px;background:#fff;color:#000}
+  .grid{display:flex;gap:12px;flex-wrap:wrap}
+  button{margin-top:16px;padding:10px 16px;border-radius:8px;border:none;background:#222;color:#fff;cursor:pointer}
+  button:hover{background:#333}
+  .contract{margin-top:18px;padding:18px;background:linear-gradient(180deg,#101010,#121212);border-radius:10px;border:1px solid rgba(255,255,255,0.02)}
+  .contract p{margin:8px 0;color:#eee}
+  .contract h2{margin-top:16px;color:#ddd}
+  .muted{color:var(--muted)}
+  .signature-section{margin-top:18px;padding-top:12px;border-top:1px solid #222;position:relative}
+  .stamp{display:block;margin:12px auto 6px auto;width:140px;opacity:0.14;pointer-events:none}
+  #resultsBox{display:none;margin-top:16px;padding:12px;background:#0b0b0b;border-radius:8px;border:1px solid rgba(255,255,255,0.03);white-space:pre-wrap;color:#fff}
+  #copyBtn{display:none;margin-top:8px}
+  .small{font-size:13px;color:var(--muted)}
+  @media (max-width:760px){.lang-row{flex-direction:column;align-items:flex-start}.grid{flex-direction:column}}
+</style>
+</head>
+<body>
+  <div class="loader-wrap"><div class="loader" title="loading"></div></div>
+
+  <div class="container" id="mainContainer">
+    <img src="logo.png/logo..jpg" alt="Company Logo" class="logo" id="logoImage">
+
+    <!-- Title (translatable) -->
+    <h1 id="titleText">Employment Contract</h1>
+
+    <div class="lang-row">
+      <div class="small"></div>
+      <div class="select-wrap">
+        <select id="langSelect" aria-label="Language">
+          <option value="en">English</option>
+          <option value="zh">中文 (Chinese)</option>
+          <option value="th">ไทย (Thai)</option>
+          <option value="ko">한국어 (Korean)</option>
+          <option value="jp">日本語 (Japanese)</option>
+          <option value="ar">العربية (Arabic)</option>
+          <option value="bn">বাংলা (Bengali)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Fill section -->
+    <div class="fill-section" role="form" aria-label="Fill contract form">
+      <div class="grid">
+        <div>
+          <label id="label_empName">Employee (Party B) Name:</label>
+          <input id="empName" type="text" placeholder="Enter employee name">
+        </div>
+
+        <div>
+          <label id="label_position">Employee Position:</label>
+          <input id="empPosition" type="text" placeholder="Enter position">
+        </div>
+
+        <div>
+          <label id="label_salary">Employee Monthly Salary (USD):</label>
+          <input id="empSalary" type="text" placeholder="Enter salary">
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top:10px">
+        <div>
+          <label id="label_start">Contract Start Date:</label>
+          <input id="startDate" type="date">
+        </div>
+        <div>
+          <label id="label_end">Contract End Date:</label>
+          <input id="endDate" type="date">
+        </div>
+        <div>
+          <label id="label_dateA">Employer Signature Date:</label>
+          <input id="empDateA" type="date">
+        </div>
+        <div>
+          <label id="label_dateB">Employee Signature Date:</label>
+          <input id="empDateB" type="date">
+        </div>
+      </div>
+
+      <div style="margin-top:12px">
+        <button id="fillBtn">Fill Into Contract</button>
+      </div>
+    </div>
+
+    <!-- Contract content (all translatable) -->
+    <div class="contract" id="contractArea" aria-live="polite">
+      <p id="employerText"><b>Employer (Party A):</b> Schroder Quantitative Technology Co., Ltd.</p>
+
+      <p><b id="label_outEmployee">Employee (Party B):</b> <span id="outName" class="muted">________________________________________</span></p>
+
+      <p><b id="label_outPosition">Position:</b> <span id="outPosition" class="muted">____________________________________________</span></p>
+
+      <p>
+        <b id="contractTermText">Contract Term:</b>
+        <span id="fromText">From</span> <span id="outStart" class="muted">____ / ____ / ______</span>
+        <span id="toText">to</span> <span id="outEnd" class="muted">____ / ____ / ______</span>
+      </p>
+
+      <h2 id="sec1_title">1. Job Responsibilities</h2>
+      <p id="sec1_p1">Party B agrees to perform the duties assigned by Party A, including but not limited to:</p>
+      <ol id="sec1_list">
+        <li id="sec1_li1">Promoting the company’s products, services, or brand through approved channels.</li>
+        <li id="sec1_li2">Inviting and attracting new users, clients, or partners to join or engage with the company.</li>
+        <li id="sec1_li3">Participating in marketing campaigns, outreach activities, and communication tasks arranged by Party A.</li>
+        <li id="sec1_li4">Providing timely updates, reports, and feedback regarding promotional progress.</li>
+        <li id="sec1_li5">Following all instructions, guidelines, and policies provided by Party A regarding promotional work.</li>
+      </ol>
+      <p id="sec1_p2">Party B shall complete tasks with professionalism, diligence, and responsibility.</p>
+
+      <h2 id="sec2_title">2. Working Hours and Attendance</h2>
+      <ol id="sec2_list">
+        <li id="sec2_li1">Working hours shall follow the standards established by Party A, subject to local labor regulations.</li>
+        <li id="sec2_li2">Party B shall ensure timely attendance and completion of assigned duties.</li>
+        <li id="sec2_li3">Adjustments to working hours may be arranged with mutual agreement.</li>
+      </ol>
+
+      <h2 id="sec3_title">3. Compensation</h2>
+      <ol id="sec3_list">
+        <li id="sec3_li1">Monthly Salary: USD <span id="outSalary" class="muted">___________</span></li>
+        <li id="sec3_li2">Salary will be paid monthly to the bank account designated by Party B.</li>
+        <li id="sec3_li3">Any bonuses, commissions, or allowances (if applicable) will be based on Party A’s policies.</li>
+      </ol>
+
+      <h2 id="sec4_title">4. Conduct and Professional Standards</h2>
+      <ol id="sec4_list">
+        <li id="sec4_li1">Act professionally and respectfully toward colleagues, clients, and partners.</li>
+        <li id="sec4_li2">Follow Party A’s workplace rules, communication guidelines, and promotional standards.</li>
+        <li id="sec4_li3">Avoid any behavior that may damage Party A’s reputation, brand image, or customer relations.</li>
+        <li id="sec4_li4">Use only approved promotional materials and follow correct representation of the company.</li>
+      </ol>
+
+      <h2 id="sec5_title">5. Use of Company Resources</h2>
+      <ol id="sec5_list">
+        <li id="sec5_li1">If Party A provides equipment, accounts, or promotional materials, Party B shall use them responsibly for work purposes only.</li>
+        <li id="sec5_li2">Party B shall not misuse or damage any company property.</li>
+        <li id="sec5_li3">Party B shall return all materials upon contract termination.</li>
+      </ol>
+
+      <h2 id="sec6_title">6. Contract Termination</h2>
+      <p id="sec6_p1">Party A may terminate the Contract under the following circumstances:</p>
+      <ol id="sec6_list">
+        <li id="sec6_li1">Party B fails to perform job duties or repeatedly neglects responsibilities.</li>
+        <li id="sec6_li2">Party B violates company rules, professional standards, or instructions related to promotional activities.</li>
+        <li id="sec6_li3">Party B engages in misconduct that negatively affects Party A.</li>
+        <li id="sec6_li4">Any other reasons permitted under local labor laws.</li>
+      </ol>
+      <p id="sec6_p2">Party B may resign by providing written notice <span id="outNotice" class="muted">____</span> days in advance.</p>
+
+      <h2 id="sec7_title">7. Dispute Resolution</h2>
+      <p id="sec7_p1">Any disputes arising from this Contract shall first be resolved through friendly negotiation. If negotiation fails, the dispute shall be handled according to the laws and regulations of the location where the Contract is executed.</p>
+
+      <h2 id="sec8_title">8. Other Provisions</h2>
+      <ol id="sec8_list">
+        <li id="sec8_li1">This Contract becomes effective upon signature by both parties.</li>
+        <li id="sec8_li2">Any amendments must be made in written form and agreed by both parties.</li>
+        <li id="sec8_li3">Matters not covered in this Contract may be supplemented through additional written agreements.</li>
+      </ol>
+      
+<!-- stamp container and signatures -->
+      <div class="signature-section">
+        <div class="stamp-container">
+          <!-- stamp image (place file named "stamp.png" in same folder) -->
+          <p><b>Employer (Party A) Signature:</b> ____________________________</p>
+          <p>Date: <span id="outDateA">____ / ____ / ______</span></p>
+        </div>
+
+        <div class="contract-wrapper">
+          <img src="logo.png/icon..png" class="stamp-overlay">
+          <p><b>Employee (Party B) Signature:</b> <span id="outSigName">______________________________</span></p>
+          <p>Date: <span id="outDateB">____ / ____ / ______</span></p>
+        </div>
+      </div>
+      
+    </div>
+    </div>
+
+    <div id="resultsBox" aria-hidden="true"></div>
+    <button id="copyBtn">Copy Completed Contract</button>
+  </div>
+
+<script>
+/* ---------- translation content for full contract (en, zh, th, ko, jp, ar, bn) ---------- */
+/* Each language object contains translations for all element IDs used above. */
+const TRANSLATIONS = {
+  en: {
+    dir: "ltr",
+    titleText: "Employment Contract",
+    label_empName: "Employee (Party B) Name:",
+    label_position: "Employee Position:",
+    label_salary: "Employee Monthly Salary (USD):",
+    label_start: "Contract Start Date:",
+    label_end: "Contract End Date:",
+    label_dateA: "Employer Signature Date:",
+    label_dateB: "Employee Signature Date:",
+    fillBtn: "Fill Into Contract",
+    employerText: "Employer (Party A): Schroder Quantitative Technology Co., Ltd.",
+    label_outEmployee: "Employee (Party B):",
+    label_outPosition: "Position:",
+    contractTermText: "Contract Term:",
+    fromText: "From",
+    toText: "to",
+    sec1_title: "1. Job Responsibilities",
+    sec1_p1: "Party B agrees to perform the duties assigned by Party A, including but not limited to:",
+    sec1_li1: "Promoting the company’s products, services, or brand through approved channels.",
+    sec1_li2: "Inviting and attracting new users, clients, or partners to join or engage with the company.",
+    sec1_li3: "Participating in marketing campaigns, outreach activities, and communication tasks arranged by Party A.",
+    sec1_li4: "Providing timely updates, reports, and feedback regarding promotional progress.",
+    sec1_li5: "Following all instructions, guidelines, and policies provided by Party A regarding promotional work.",
+    sec1_p2: "Party B shall complete tasks with professionalism, diligence, and responsibility.",
+    sec2_title: "2. Working Hours and Attendance",
+    sec2_li1: "Working hours shall follow the standards established by Party A, subject to local labor regulations.",
+    sec2_li2: "Party B shall ensure timely attendance and completion of assigned duties.",
+    sec2_li3: "Adjustments to working hours may be arranged with mutual agreement.",
+    sec3_title: "3. Compensation",
+    sec3_li1_prefix: "Monthly Salary: USD",
+    sec3_li2: "Salary will be paid monthly to the bank account designated by Party B.",
+    sec3_li3: "Any bonuses, commissions, or allowances (if applicable) will be based on Party A’s policies.",
+    sec4_title: "4. Conduct and Professional Standards",
+    sec4_li1: "Act professionally and respectfully toward colleagues, clients, and partners.",
+    sec4_li2: "Follow Party A’s workplace rules, communication guidelines, and promotional standards.",
+    sec4_li3: "Avoid any behavior that may damage Party A’s reputation, brand image, or customer relations.",
+    sec4_li4: "Use only approved promotional materials and follow correct representation of the company.",
+    sec5_title: "5. Use of Company Resources",
+    sec5_li1: "If Party A provides equipment, accounts, or promotional materials, Party B shall use them responsibly for work purposes only.",
+    sec5_li2: "Party B shall not misuse or damage any company property.",
+    sec5_li3: "Party B shall return all materials upon contract termination.",
+    sec6_title: "6. Contract Termination",
+    sec6_p1: "Party A may terminate the Contract under the following circumstances:",
+    sec6_li1: "Party B fails to perform job duties or repeatedly neglects responsibilities.",
+    sec6_li2: "Party B violates company rules, professional standards, or instructions related to promotional activities.",
+    sec6_li3: "Party B engages in misconduct that negatively affects Party A.",
+    sec6_li4: "Any other reasons permitted under local labor laws.",
+    sec6_p2_prefix: "Party B may resign by providing written notice",
+    sec6_p2_suffix: "days in advance.",
+    sec7_title: "7. Dispute Resolution",
+    sec7_p1: "Any disputes arising from this Contract shall first be resolved through friendly negotiation. If negotiation fails, the dispute shall be handled according to the laws and regulations of the location where the Contract is executed.",
+    sec8_title: "8. Other Provisions",
+    sec8_li1: "This Contract becomes effective upon signature by both parties.",
+    sec8_li2: "Any amendments must be made in written form and agreed by both parties.",
+    sec8_li3: "Matters not covered in this Contract may be supplemented through additional written agreements.",
+    sigA: "Employer (Party A) Signature:",
+    sigAdate: "Date:",
+    sigB: "Employee (Party B) Signature:",
+    sigBdate: "Date:"
+  },
+
+  zh: {
+    dir: "ltr",
+    titleText: "雇佣合同",
+    label_empName: "员工（乙方）姓名：",
+    label_position: "员工职位：",
+    label_salary: "员工月薪（美元）：",
+    label_start: "合同开始日期：",
+    label_end: "合同结束日期：",
+    label_dateA: "甲方签署日期：",
+    label_dateB: "乙方签署日期：",
+    fillBtn: "填写到合同",
+    employerText: "雇主（甲方）：施罗德量化科技有限公司",
+    label_outEmployee: "员工（乙方）：",
+    label_outPosition: "职位：",
+    contractTermText: "合同期限：",
+    fromText: "从",
+    toText: "至",
+    sec1_title: "1. 工作职责",
+    sec1_p1: "乙方同意履行甲方分配的职责，包括但不限于：",
+    sec1_li1: "通过批准的渠道推广公司的产品、服务或品牌。",
+    sec1_li2: "邀请并吸引新用户、客户或合作伙伴加入或与公司合作。",
+    sec1_li3: "参与甲方安排的市场活动、外联活动和沟通任务。",
+    sec1_li4: "就推广进展提供及时的更新、报告和反馈。",
+    sec1_li5: "遵守甲方关于推广工作的所有指示、指南和政策。",
+    sec1_p2: "乙方应以专业、勤勉和负责的态度完成任务。",
+    sec2_title: "2. 工作时间与出勤",
+    sec2_li1: "工作时间应遵循甲方制定的标准，并遵守当地劳动法规。",
+    sec2_li2: "乙方应确保按时出勤并完成分配的任务。",
+    sec2_li3: "工作时间可在双方同意的情况下进行调整。",
+    sec3_title: "3. 薪酬",
+    sec3_li1_prefix: "月薪：美元",
+    sec3_li2: "工资将按月支付到乙方指定的银行账户。",
+    sec3_li3: "任何奖金、佣金或津贴（如适用）将根据甲方政策执行。",
+    sec4_title: "4. 行为与职业规范",
+    sec4_li1: "对同事、客户和合作伙伴保持专业和尊重的态度。",
+    sec4_li2: "遵守甲方的工作规则、沟通指南和推广标准。",
+    sec4_li3: "避免任何可能损害甲方声誉、品牌形象或客户关系的行为。",
+    sec4_li4: "仅使用经批准的推广材料，并正确代表公司。",
+    sec5_title: "5. 公司资源的使用",
+    sec5_li1: "如果甲方提供设备、账户或推广材料，乙方应仅为工作目的合理使用它们。",
+    sec5_li2: "乙方不得滥用或损坏任何公司财产。",
+    sec5_li3: "合同终止时，乙方应归还所有材料。",
+    sec6_title: "6. 合同终止",
+    sec6_p1: "在以下情况下，甲方可终止合同：",
+    sec6_li1: "乙方未能履行工作职责或多次忽视责任。",
+    sec6_li2: "乙方违反与推广活动相关的公司规则、职业规范或指示。",
+    sec6_li3: "乙方从事对甲方产生不利影响的不当行为。",
+    sec6_li4: "任何其他当地劳动法允许的情形。",
+    sec6_p2_prefix: "乙方可通过提前书面通知",
+    sec6_p2_suffix: "天提出辞职。",
+    sec7_title: "7. 争议解决",
+    sec7_p1: "因本合同产生的任何争议应首先通过友好协商解决。如协商不成，应根据合同签订地的法律法规处理争议。",
+    sec8_title: "8. 其他条款",
+    sec8_li1: "本合同经双方签字后生效。",
+    sec8_li2: "任何修改须以书面形式作出并经双方同意。",
+    sec8_li3: "本合同未尽事宜可通过补充书面协议约定。",
+    sigA: "雇主（甲方）签名：",
+    sigAdate: "日期：",
+    sigB: "员工（乙方）签名：",
+    sigBdate: "日期："
+  },
+
+  th: {
+    dir: "ltr",
+    titleText: "สัญญาจ้างงาน",
+    label_empName: "ชื่อพนักงาน (ฝ่าย B):",
+    label_position: "ตำแหน่งพนักงาน:",
+    label_salary: "เงินเดือนรายเดือน (USD):",
+    label_start: "วันที่เริ่มสัญญา:",
+    label_end: "วันสิ้นสุดสัญญา:",
+    label_dateA: "วันที่นายจ้างลงนาม:",
+    label_dateB: "วันที่ลูกจ้างลงนาม:",
+    fillBtn: "กรอกลงในสัญญา",
+    employerText: "นายจ้าง (ฝ่าย A): Schroder Quantitative Technology Co., Ltd.",
+    label_outEmployee: "พนักงาน (ฝ่าย B):",
+    label_outPosition: "ตำแหน่ง:",
+    contractTermText: "ระยะเวลาสัญญา:",
+    fromText: "จาก",
+    toText: "ถึง",
+    sec1_title: "1. หน้าที่การทำงาน",
+    sec1_p1: "ฝ่าย B ตกลงที่จะปฏิบัติหน้าที่ที่ฝ่าย A มอบหมายไว้ รวมถึงแต่ไม่จำกัดเฉพาะ:",
+    sec1_li1: "ส่งเสริมผลิตภัณฑ์ บริการ หรือแบรนด์ของบริษัทผ่านช่องทางที่ได้รับอนุมัติ",
+    sec1_li2: "เชิญและดึงดูดผู้ใช้ใหม่ ลูกค้า หรือพันธมิตรให้เข้าร่วมหรือมีส่วนร่วมกับบริษัท",
+    sec1_li3: "เข้าร่วมแคมเปญการตลาด กิจกรรมเผยแพร่ และงานสื่อสารที่ฝ่าย A จัด",
+    sec1_li4: "ให้การอัปเดต รายงาน และข้อเสนอแนะเกี่ยวกับความก้าวหน้าการโปรโมทอย่างทันท่วงที",
+    sec1_li5: "ปฏิบัติตามคำแนะนำ แนวทาง และนโยบายของฝ่าย A เกี่ยวกับงานโปรโมท",
+    sec1_p2: "ฝ่าย B จะปฏิบัติงานด้วยความเป็นมืออาชีพ ขยัน และมีความรับผิดชอบ",
+    sec2_title: "2. เวลาทำงานและการเข้าร่วมงาน",
+    sec2_li1: "เวลาทำงานให้เป็นไปตามมาตรฐานที่ฝ่าย A กำหนด โดยเป็นไปตามกฎหมายแรงงานในท้องถิ่น",
+    sec2_li2: "ฝ่าย B ต้องแน่ใจว่าเข้าทำงานตรงเวลาและทำงานที่ได้รับมอบหมายให้เสร็จ",
+    sec2_li3: "การปรับเปลี่ยนเวลาทำงานสามารถจัดได้ด้วยความเห็นชอบร่วมกัน",
+    sec3_title: "3. ค่าตอบแทน",
+    sec3_li1_prefix: "เงินเดือนรายเดือน: USD",
+    sec3_li2: "จะจ่ายเงินเดือนเป็นรายเดือนเข้าบัญชีธนาคารที่ฝ่าย B ระบุ",
+    sec3_li3: "โบนัส ค่าคอมมิชชั่น หรือค่าตอบแทนอื่น ๆ (ถ้ามี) จะขึ้นอยู่กับนโยบายของฝ่าย A",
+    sec4_title: "4. มาตรฐานพฤติกรรมและวิชาชีพ",
+    sec4_li1: "ปฏิบัติตนอย่างเป็นมืออาชีพและเคารพต่อเพื่อนร่วมงาน ลูกค้า และพันธมิตร",
+    sec4_li2: "ปฏิบัติตามกฎในการทำงาน แนวทางการสื่อสาร และมาตรฐานการโปรโมทของฝ่าย A",
+    sec4_li3: "หลีกเลี่ยงพฤติกรรมที่อาจทำให้เสียชื่อเสียงของฝ่าย A",
+    sec4_li4: "ใช้เฉพาะวัสดุโปรโมทที่ได้รับอนุมัติและนำเสนอบริษัทอย่างถูกต้อง",
+    sec5_title: "5. การใช้ทรัพยากรของบริษัท",
+    sec5_li1: "หากฝ่าย A จัดหาอุปกรณ์ บัญชี หรือวัสดุโปรโมท ฝ่าย B จะใช้เพื่อวัตถุประสงค์ในการทำงานเท่านั้น",
+    sec5_li2: "ไม่ใช้ผิดวัตถุประสงค์หรือทำให้อุปกรณ์ของบริษัทเสียหาย",
+    sec5_li3: "คืนวัสดุทั้งหมดเมื่อสัญญาสิ้นสุด",
+    sec6_title: "6. การยกเลิกสัญญา",
+    sec6_p1: "ฝ่าย A อาจยกเลิกสัญญาได้ในกรณีต่อไปนี้:",
+    sec6_li1: "ฝ่าย B ไม่ปฏิบัติหน้าที่หรือเพิกเฉยต่อความรับผิดชอบหลายครั้ง",
+    sec6_li2: "ฝ่าย B ละเมิดกฎของบริษัท มาตรฐานวิชาชีพ หรือคำสั่งที่เกี่ยวข้องกับการโปรโมท",
+    sec6_li3: "ฝ่าย B กระทำความผิดที่ส่งผลเสียต่อฝ่าย A",
+    sec6_li4: "เหตุผลอื่น ๆ ตามกฎหมายแรงงานท้องถิ่น",
+    sec6_p2_prefix: "ฝ่าย B สามารถลาออกโดยแจ้งเป็นลายลักษณ์อักษรล่วงหน้า",
+    sec6_p2_suffix: "วัน",
+    sec7_title: "7. การระงับข้อพิพาท",
+    sec7_p1: "ข้อพิพาทใด ๆ จากสัญญานี้จะต้องแก้ไขโดยการเจรจาเป็นมิตรก่อน หากไม่สำเร็จจะเป็นไปตามกฎหมายของสถานที่ที่ทำสัญญา",
+    sec8_title: "8. ข้อกำหนดอื่น ๆ",
+    sec8_li1: "สัญญานี้มีผลบังคับใช้เมื่อทั้งสองฝ่ายลงนาม",
+    sec8_li2: "การแก้ไขต้องเป็นลายลักษณ์อักษรและได้รับความยินยอมจากทั้งสองฝ่าย",
+    sec8_li3: "เรื่องที่ไม่ได้กล่าวถึงในสัญญานี้อาจทำเป็นหนังสือเพิ่มเติม",
+    sigA: "นายจ้าง (ฝ่าย A) ลายเซ็น:",
+    sigAdate: "วันที่:",
+    sigB: "พนักงาน (ฝ่าย B) ลายเซ็น:",
+    sigBdate: "วันที่:"
+  },
+
+  ko: {
+    dir: "ltr",
+    titleText: "고용 계약서",
+    label_empName: "직원(당사자 B) 성명:",
+    label_position: "직책:",
+    label_salary: "월 급여 (USD):",
+    label_start: "계약 시작일:",
+    label_end: "계약 종료일:",
+    label_dateA: "고용주 서명일:",
+    label_dateB: "직원 서명일:",
+    fillBtn: "계약서 채우기",
+    employerText: "고용주(당사자 A): Schroder Quantitative Technology Co., Ltd.",
+    label_outEmployee: "직원(당사자 B):",
+    label_outPosition: "직책:",
+    contractTermText: "계약 기간:",
+    fromText: "부터",
+    toText: "까지",
+    sec1_title: "1. 직무 내용",
+    sec1_p1: "당사자 B는 당사자 A가 지정한 업무를 수행하기로 동의하며, 다음을 포함하되 이에 국한되지 않습니다:",
+    sec1_li1: "승인된 채널을 통해 회사의 제품, 서비스 또는 브랜드를 홍보합니다.",
+    sec1_li2: "회사에 가입하거나 참여할 새로운 사용자, 고객 또는 파트너를 초대하고 유치합니다.",
+    sec1_li3: "당사자 A가 주최하는 마케팅 캠페인, 홍보 활동 및 커뮤니케이션 업무에 참여합니다.",
+    sec1_li4: "프로모션 진행 상황에 대한 적시 업데이트, 보고서 및 피드백을 제공합니다.",
+    sec1_li5: "프로모션 작업과 관련하여 당사자 A가 제공한 모든 지침, 가이드라인 및 정책을 따릅니다.",
+    sec1_p2: "당사자 B는 전문적이고 성실하며 책임감 있게 업무를 완료해야 합니다.",
+    sec2_title: "2. 근무 시간 및 출석",
+    sec2_li1: "근무 시간은 당사자 A가 정한 기준에 따르며 현지 노동법을 준수합니다.",
+    sec2_li2: "당사자 B는 정시 출근 및 할당된 업무 완료를 보장해야 합니다.",
+    sec2_li3: "근무 시간 조정은 상호 합의로 조정할 수 있습니다.",
+    sec3_title: "3. 보수",
+    sec3_li1_prefix: "월 급여: USD",
+    sec3_li2: "급여는 당사자 B가 지정한 은행 계좌로 매월 지급됩니다.",
+    sec3_li3: "보너스, 커미션 또는 수당(해당되는 경우)은 당사자 A의 정책에 따릅니다.",
+    sec4_title: "4. 행동 및 전문 기준",
+    sec4_li1: "동료, 고객 및 파트너에 대해 전문적이고 존중하는 태도를 유지합니다.",
+    sec4_li2: "당사자 A의 직장 규칙, 통신 지침 및 홍보 표준을 따릅니다.",
+    sec4_li3: "당사자 A의 평판, 브랜드 이미지 또는 고객 관계에 손상을 줄 수 있는 행위를 피합니다.",
+    sec4_li4: "승인된 홍보 자료만 사용하고 회사를 올바르게 대표합니다.",
+    sec5_title: "5. 회사 자원 사용",
+    sec5_li1: "당사자 A가 장비, 계정 또는 홍보 자료를 제공하는 경우 당사자 B는 업무 목적에만 책임감 있게 사용해야 합니다.",
+    sec5_li2: "당사자 B는 회사 자산을 오용하거나 손상시켜서는 안 됩니다.",
+    sec5_li3: "계약 종료 시 모든 자료를 반환해야 합니다.",
+    sec6_title: "6. 계약 해지",
+    sec6_p1: "당사자 A는 다음과 같은 경우 계약을 해지할 수 있습니다:",
+    sec6_li1: "당사자 B가 업무를 수행하지 않거나 반복적으로 책임을 소홀히 하는 경우.",
+    sec6_li2: "당사자 B가 홍보 활동과 관련된 회사 규칙, 전문 표준 또는 지침을 위반하는 경우.",
+    sec6_li3: "당사자 B가 당사자 A에 부정적인 영향을 미치는 본질적인 위법 행위를 한 경우.",
+    sec6_li4: "현지 노동법에서 허용하는 기타 사유.",
+    sec6_p2_prefix: "당사자 B는 서면 통지로",
+    sec6_p2_suffix: "일 전에 사임할 수 있습니다.",
+    sec7_title: "7. 분쟁 해결",
+    sec7_p1: "본 계약에서 발생하는 모든 분쟁은 우선적으로 우호적 협상을 통해 해결되어야 합니다. 협상이 실패하는 경우 계약이 체결된 장소의 법률 및 규정에 따라 처리됩니다.",
+    sec8_title: "8. 기타 조항",
+    sec8_li1: "본 계약은 양 당사자의 서명으로 효력을 발생합니다.",
+    sec8_li2: "수정 사항은 서면으로 작성되어 양 당사자의 합의가 있어야 합니다.",
+    sec8_li3: "본 계약에 명시되지 않은 사항은 추가 서면 합의로 보완할 수 있습니다.",
+    sigA: "고용주 (당사자 A) 서명:",
+    sigAdate: "날짜:",
+    sigB: "직원 (당사자 B) 서명:",
+    sigBdate: "날짜:"
+  },
+
+  jp: {
+    dir: "ltr",
+    titleText: "雇用契約書",
+    label_empName: "従業員（乙）氏名：",
+    label_position: "職位：",
+    label_salary: "月給（USD）：",
+    label_start: "契約開始日：",
+    label_end: "契約終了日：",
+    label_dateA: "雇用者署名日：",
+    label_dateB: "従業員署名日：",
+    fillBtn: "契約に入力",
+    employerText: "雇用者（甲）：Schroder Quantitative Technology Co., Ltd.",
+    label_outEmployee: "従業員（乙）：",
+    label_outPosition: "職位：",
+    contractTermText: "契約期間：",
+    fromText: "から",
+    toText: "まで",
+    sec1_title: "1. 業務内容",
+    sec1_p1: "乙は、甲が割り当てる職務を履行することに同意し、これには以下が含まれますがこれらに限定されません：",
+    sec1_li1: "承認されたチャネルを通じて会社の製品、サービス、またはブランドを宣伝すること。",
+    sec1_li2: "新しいユーザー、クライアント、またはパートナーを招待し、会社に参加または関与させることを促すこと。",
+    sec1_li3: "甲が手配するマーケティングキャンペーン、アウトリーチ活動、およびコミュニケーション業務に参加すること。",
+    sec1_li4: "プロモーションの進捗に関するタイムリーな更新、報告、およびフィードバックを提供すること。",
+    sec1_li5: "プロモーション作業に関して甲が提供するすべての指示、ガイドライン、ポリシーに従うこと。",
+    sec1_p2: "乙は、専門的、誠実、かつ責任を持って業務を完了するものとします。",
+    sec2_title: "2. 勤務時間および出勤",
+    sec2_li1: "勤務時間は甲が定める基準に従い、現地の労働法に準拠します。",
+    sec2_li2: "乙は定時出勤および割り当てられた職務の完了を確実にするものとします。",
+    sec2_li3: "勤務時間の調整は相互合意により行うことができます。",
+    sec3_title: "3. 報酬",
+    sec3_li1_prefix: "月給：USD",
+    sec3_li2: "給与は乙が指定した銀行口座に毎月支払われます。",
+    sec3_li3: "ボーナス、手数料、または手当（該当する場合）は甲の方針に基づきます。",
+    sec4_title: "4. 行動および職業基準",
+    sec4_li1: "同僚、クライアント、およびパートナーに対して専門的かつ敬意を持って行動すること。",
+    sec4_li2: "甲の職場規則、コミュニケーションガイドライン、およびプロモーション基準に従うこと。",
+    sec4_li3: "甲の評判、ブランドイメージ、または顧客関係を損なう可能性のある行為を避けること。",
+    sec4_li4: "承認されたプロモーション資料のみを使用し、会社を正しく表現すること。",
+    sec5_title: "5. 会社資源の使用",
+    sec5_li1: "甲が機器、アカウント、またはプロモーション資料を提供する場合、乙は業務目的にのみそれらを責任を持って使用すること。",
+    sec5_li2: "乙は会社の財産を濫用したり損傷してはなりません。",
+    sec5_li3: "契約終了時にすべての資料を返却すること。",
+    sec6_title: "6. 契約解除",
+    sec6_p1: "甲は以下の場合に契約を解除することができます：",
+    sec6_li1: "乙が職務を遂行しない、または繰り返し責任を怠る場合。",
+    sec6_li2: "乙がプロモーション活動に関連する会社規則、職業基準、または指示に違反する場合。",
+    sec6_li3: "乙が甲に悪影響を与える不正行為に従事する場合。",
+    sec6_li4: "現地の労働法で許可されるその他の理由。",
+    sec6_p2_prefix: "乙は書面による通知により",
+    sec6_p2_suffix: "日前に辞任することができます。",
+    sec7_title: "7. 紛争解決",
+    sec7_p1: "本契約に起因する紛争は、まず友好的な交渉により解決されるものとします。交渉が失敗した場合、紛争は契約が締結された場所の法律および規制に従って処理されます。",
+    sec8_title: "8. その他の規定",
+    sec8_li1: "本契約は両当事者が署名した時点で有効となります。",
+    sec8_li2: "変更は書面で行い、両当事者の合意を必要とします。",
+    sec8_li3: "本契約に記載されていない事項は、追加の書面契約により補足することができます。",
+    sigA: "雇用者（甲）署名：",
+    sigAdate: "日付：",
+    sigB: "従業員（乙）署名：",
+    sigBdate: "日付："
+  },
+
+  ar: {
+    dir: "rtl",
+    titleText: "عقد العمل",
+    label_empName: "اسم الموظف (الطرف ب):",
+    label_position: "المنصب:",
+    label_salary: "الراتب الشهري (دولار أمريكي):",
+    label_start: "تاريخ بدء العقد:",
+    label_end: "تاريخ انتهاء العقد:",
+    label_dateA: "تاريخ توقيع صاحب العمل:",
+    label_dateB: "تاريخ توقيع الموظف:",
+    fillBtn: "املأ العقد",
+    employerText: "صاحب العمل (الطرف أ): Schroder Quantitative Technology Co., Ltd.",
+    label_outEmployee: "الموظف (الطرف ب):",
+    label_outPosition: "المنصب:",
+    contractTermText: "مدة العقد:",
+    fromText: "من",
+    toText: "إلى",
+    sec1_title: "1. مهام الوظيفة",
+    sec1_p1: "يوافق الطرف ب على أداء الواجبات التي يكلفه بها الطرف أ، بما في ذلك على سبيل المثال لا الحصر:",
+    sec1_li1: "الترويج لمنتجات أو خدمات أو علامة الشركة من خلال القنوات المعتمدة.",
+    sec1_li2: "دعوة وجذب مستخدمين جدد أو عملاء أو شركاء للانضمام أو التفاعل مع الشركة.",
+    sec1_li3: "المشاركة في حملات تسويقية وأنشطة تواصلية ينظمها الطرف أ.",
+    sec1_li4: "تقديم تحديثات وتقارير وردود فعل في الوقت المناسب حول تقدم الحملات.",
+    sec1_li5: "اتباع كافة التعليمات والإرشادات والسياسات المقدمة من الطرف أ بخصوص العمل الترويجي.",
+    sec1_p2: "يجب على الطرف ب إكمال المهام بمهنية واجتهاد ومسؤولية.",
+    sec2_title: "2. ساعات العمل والحضور",
+    sec2_li1: "تلتزم ساعات العمل بالمعايير التي يحددها الطرف أ وبما يتوافق مع قوانين العمل المحلية.",
+    sec2_li2: "يجب على الطرف ب ضمان الحضور في الوقت المحدد وإتمام المهام الموكلة إليه.",
+    sec2_li3: "يمكن ترتيب تعديلات ساعات العمل باتفاق متبادل.",
+    sec3_title: "3. الأجر",
+    sec3_li1_prefix: "الراتب الشهري: USD",
+    sec3_li2: "سيتم دفع الراتب شهريًا إلى الحساب المصرفي الذي يحدده الطرف ب.",
+    sec3_li3: "أي مكافآت أو عمولات أو بدلات (إن وجدت) ستكون وفقًا لسياسات الطرف أ.",
+    sec4_title: "4. السلوك والمعايير المهنية",
+    sec4_li1: "التصرف بمهنية واحترام تجاه الزملاء والعملاء والشركاء.",
+    sec4_li2: "اتباع قواعد العمل وإرشادات التواصل ومعايير الترويج الخاصة بالطرف أ.",
+    sec4_li3: "تجنب أي سلوك قد يضر بسمعة الطرف أ أو صورته أو علاقاته مع العملاء.",
+    sec4_li4: "استخدام المواد الترويجية المعتمدة فقط وتمثيل الشركة بشكل صحيح.",
+    sec5_title: "5. استخدام موارد الشركة",
+    sec5_li1: "إذا قدم الطرف أ معدات أو حسابات أو مواد ترويجية، يجب على الطرف ب استخدامها للمهمات العمل فقط وبشكل مسؤول.",
+    sec5_li2: "عدم إساءة استخدام أو إتلاف ممتلكات الشركة.",
+    sec5_li3: "إعادة جميع المواد عند إنهاء العقد.",
+    sec6_title: "6. إنهاء العقد",
+    sec6_p1: "يجوز للطرف أ إنهاء العقد في الحالات التالية:",
+    sec6_li1: "فشل الطرف ب في أداء واجباته أو إهماله المتكرر لمسؤولياته.",
+    sec6_li2: "انتهاك الطرف ب لقواعد الشركة أو المعايير المهنية أو التعليمات المتعلقة بالأنشطة الترويجية.",
+    sec6_li3: "انخراط الطرف ب في سلوكيات تضر بالطرف أ.",
+    sec6_li4: "أي أسباب أخرى يسمح بها قانون العمل المحلي.",
+    sec6_p2_prefix: "يجوز للطرف ب الاستقالة بتقديم إشعار خطي قبل",
+    sec6_p2_suffix: "أيام.",
+    sec7_title: "7. تسوية النزاعات",
+    sec7_p1: "تُحل أي نزاعات تنشأ عن هذا العقد أولاً عن طريق التفاوض الودي. إذا فشل التفاوض، يُنظر في النزاع وفقًا للقوانين واللوائح في مكان تنفيذ العقد.",
+    sec8_title: "8. أحكام أخرى",
+    sec8_li1: "يصبح هذا العقد ساريًا عند توقيعه من كلا الطرفين.",
+    sec8_li2: "يجب أن تكون أي تعديلات كتابية ومتفقًا عليها من كلا الطرفين.",
+    sec8_li3: "يمكن استكمال الأمور غير المشمولة في هذا العقد باتفاقيات كتابية إضافية.",
+    sigA: "توقيع صاحب العمل (الطرف أ):",
+    sigAdate: "التاريخ:",
+    sigB: "توقيع الموظف (الطرف ب):",
+    sigBdate: "التاريخ:"
+  },
+
+  bn: {
+    dir: "ltr",
+    titleText: "চুক্তিপত্র (কর্মসংস্থান)",
+    label_empName: "কর্মচারী (পক্ষ বি) নাম:",
+    label_position: "পদবী:",
+    label_salary: "মাসিক বেতন (USD):",
+    label_start: "চুক্তি শুরুর তারিখ:",
+    label_end: "চুক্তি শেষের তারিখ:",
+    label_dateA: "নিয়োগকর্তার স্বাক্ষরের তারিখ:",
+    label_dateB: "কর্মচারীর স্বাক্ষরের তারিখ:",
+    fillBtn: "চুক্তিতে পূরণ",
+    employerText: "নিয়োগকর্তা (পক্ষ অ): Schroder Quantitative Technology Co., Ltd.",
+    label_outEmployee: "কর্মচারী (পক্ষ বি):",
+    label_outPosition: "পদবী:",
+    contractTermText: "চুক্তির মেয়াদ:",
+    fromText: "থেকে",
+    toText: "পর্যন্ত",
+    sec1_title: "1. কাজের দায়িত্বসমূহ",
+    sec1_p1: "পক্ষ বি সম্মত যে পক্ষ অ দ্বারা অর্পিত কর্তব্যসমূহ পালন করবে, যার মধ্যে অন্তর্ভুক্ত কিন্তু সীমাবদ্ধ নয়:",
+    sec1_li1: "অনুমোদিত চ্যানেলের মাধ্যমে প্রতিষ্ঠানের পণ্য, পরিষেবা বা ব্র্যান্ড প্রচার করা।",
+    sec1_li2: "নতুন ব্যবহারকারী, ক্লায়েন্ট বা অংশীদারদের আমন্ত্রণ এবং আকর্ষণ করা।",
+    sec1_li3: "পক্ষ অ কর্তৃক আয়োজিত মার্কেটিং ক্যাম্পেইন, আউটরিচ কার্যক্রম এবং যোগাযোগ কাজগুলোতে অংশগ্রহণ করা।",
+    sec1_li4: "প্রচারগত অগ্রগতির বিষয়ে সময়মতো আপডেট, রিপোর্ট ও প্রতিক্রিয়া প্রদান করা।",
+    sec1_li5: "প্রচার কাজ সংক্রান্ত সকল নির্দেশ, নির্দেশিকা ও নীতি অনুসরণ করা।",
+    sec1_p2: "পক্ষ বি পেশাদারিত্ব, পরিশ্রম ও দায়িত্বশীলতার সাথে কাজ সম্পন্ন করবে।",
+    sec2_title: "2. কাজের সময় ও উপস্থিতি",
+    sec2_li1: "কাজের সময় পক্ষ অ কর্তৃক নির্ধারিত মান অনুসরণ করবে এবং স্থানীয় শ্রম আইন মেনে চলবে।",
+    sec2_li2: "পক্ষ বি সময়মত উপস্থিতি ও নির্ধারিত কাজ সম্পন্ন নিশ্চিত করবে।",
+    sec2_li3: "কাজের সময় সমন্বয় পারস্পরিক সম্মতিতে করা যেতে পারে।",
+    sec3_title: "3. বেতন",
+    sec3_li1_prefix: "মাসিক বেতন: USD",
+    sec3_li2: "বেতন মাসিকভাবে পক্ষ বি নির্ধারিত ব্যাংক অ্যাকাউন্টে প্রদান করা হবে।",
+    sec3_li3: "যেকোনো বোনাস, কমিশন বা ভাতা (যদি প্রযোজ্য) পক্ষ অ'র নীতিমালার উপর নির্ভর করবে।",
+    sec4_title: "4. আচরণ ও পেশাগত মানদণ্ড",
+    sec4_li1: "সহকর্মী, ক্লায়েন্ট ও অংশীদারের প্রতি পেশাদার ও সম্মানজনক আচরণ রাখা।",
+    sec4_li2: "পক্ষ অ'র কর্মস্থল নীতিমালা, যোগাযোগ নির্দেশিকা ও প্রচার মানদণ্ড অনুসরণ করা।",
+    sec4_li3: "কোনও আচরণ এড়ানো যা পক্ষ অ'র সুনাম, ব্র্যান্ড ইমেজ বা গ্রাহক সম্পর্ক নষ্ট করতে পারে।",
+    sec4_li4: "শুধুমাত্র অনুমোদিত প্রচার সামগ্রী ব্যবহার করা এবং কোম্পানিকে সঠিকভাবে উপস্থাপন করা।",
+    sec5_title: "5. কোম্পানির সম্পদ ব্যবহার",
+    sec5_li1: "পক্ষ অ'র প্রদত্ত সরঞ্জাম, অ্যাকাউন্ট বা প্রচার সামগ্রী কেবল কর্মসংস্থানজনিত কাজে দায়িত্বের সাথে ব্যবহার করা উচিত।",
+    sec5_li2: "কোনও কোম্পানি সম্পদ দুরব্যবহার বা ক্ষতিগ্রস্ত করা যাবে না।",
+    sec5_li3: "চুক্তি শেষ হলে সকল সামগ্রী ফেরত দিতে হবে।",
+    sec6_title: "6. চুক্তি বিসর্জন",
+    sec6_p1: "নিম্নলিখিত অবস্থায় পক্ষ অ'র দ্বারা চুক্তি বাতিল করা হতে পারে:",
+    sec6_li1: "পক্ষ বি কর্তব্য পালনে ব্যর্থ হয় বা নিয়মিত দায়িত্ব অবহেলা করে।",
+    sec6_li2: "পক্ষ বি কোম্পানির নিয়ম, পেশাগত মানদণ্ড বা প্রচার সংক্রান্ত নির্দেশনা লঙ্ঘন করে।",
+    sec6_li3: "পক্ষ বি এমন কাজ করে যা পক্ষ অ'কে নেতিবাচক প্রভাবিত করে।",
+    sec6_li4: "স্থানীয় শ্রম আইন অনুযায়ী অন্যান্য কারণে।",
+    sec6_p2_prefix: "পক্ষ বি লিখিত নোটিশ প্রদান করে",
+    sec6_p2_suffix: "দিন আগে পদত্যাগ করতে পারে।",
+    sec7_title: "7. বিরোধ নিষ্পত্তি",
+    sec7_p1: "এই চুক্তি থেকে উদ্ভূত যে কোনও বিরোধ প্রথমে বন্ধুত্বপূর্ণ আলোচনার মাধ্যমে সমাধান করা হবে। আলোচনা ব্যর্থ হলে চুক্তি সম্পাদিত স্থানের আইন অনুযায়ী নিষ্পত্তি করা হবে।",
+    sec8_title: "8. অন্যান্য বিধান",
+    sec8_li1: "উভয় পক্ষের স্বাক্ষরের পর এই চুক্তিটি কার্যকর হবে।",
+    sec8_li2: "কোনও সংশোধনী লিখিত রূপে এবং উভয় পক্ষের সম্মতিতে করা হবে।",
+    sec8_li3: "এই চুক্তিতে নথিভুক্ত নয় এমন বিষয়সমূহ অতিরিক্ত লিখিত সম্মতিতে পরিপূরক করা যেতে পারে।",
+    sigA: "নিয়োগকর্তার (পক্ষ অ) স্বাক্ষর:",
+    sigAdate: "তারিখ:",
+    sigB: "কর্মচারীর (পক্ষ বি) স্বাক্ষর:",
+    sigBdate: "তারিখ:"
+  }
+};
+
+/* ---------- helper to set text safely ---------- */
+function setText(id, text){
+  const el = document.getElementById(id);
+  if(el) el.innerText = text;
+}
+
+/* ---------- apply all translations to page elements ---------- */
+function applyLanguage(code){
+  const dict = TRANSLATIONS[code] || TRANSLATIONS.en;
+  // set direction
+  document.documentElement.dir = dict.dir || "ltr";
+  // basic labels
+  setText("titleText", dict.titleText);
+  setText("label_empName", dict.label_empName);
+  setText("label_position", dict.label_position);
+  setText("label_salary", dict.label_salary);
+  setText("label_start", dict.label_start);
+  setText("label_end", dict.label_end);
+  setText("label_dateA", dict.label_dateA);
+  setText("label_dateB", dict.label_dateB);
+  setText("fillBtn", dict.fillBtn);
+  setText("employerText", dict.employerText);
+  setText("label_outEmployee", dict.label_outEmployee);
+  setText("label_outPosition", dict.label_outPosition);
+  setText("contractTermText", dict.contractTermText);
+  setText("fromText", dict.fromText);
+  setText("toText", dict.toText);
+
+  // section 1
+  setText("sec1_title", dict.sec1_title);
+  setText("sec1_p1", dict.sec1_p1);
+  setText("sec1_li1", dict.sec1_li1);
+  setText("sec1_li2", dict.sec1_li2);
+  setText("sec1_li3", dict.sec1_li3);
+  setText("sec1_li4", dict.sec1_li4);
+  setText("sec1_li5", dict.sec1_li5);
+  setText("sec1_p2", dict.sec1_p2);
+
+  // section 2
+  setText("sec2_title", dict.sec2_title);
+  setText("sec2_li1", dict.sec2_li1);
+  setText("sec2_li2", dict.sec2_li2);
+  setText("sec2_li3", dict.sec2_li3);
+
+  // section 3
+  setText("sec3_title", dict.sec3_title);
+  // sec3_li1 is prefix + salary, so we handle when filling
+  setText("sec3_li2", dict.sec3_li2);
+  setText("sec3_li3", dict.sec3_li3);
+
+  // section 4
+  setText("sec4_title", dict.sec4_title);
+  setText("sec4_li1", dict.sec4_li1);
+  setText("sec4_li2", dict.sec4_li2);
+  setText("sec4_li3", dict.sec4_li3);
+  setText("sec4_li4", dict.sec4_li4);
+
+  // section 5
+  setText("sec5_title", dict.sec5_title);
+  setText("sec5_li1", dict.sec5_li1);
+  setText("sec5_li2", dict.sec5_li2);
+  setText("sec5_li3", dict.sec5_li3);
+
+  // section 6
+  setText("sec6_title", dict.sec6_title);
+  setText("sec6_p1", dict.sec6_p1);
+  setText("sec6_li1", dict.sec6_li1);
+  setText("sec6_li2", dict.sec6_li2);
+  setText("sec6_li3", dict.sec6_li3);
+  setText("sec6_li4", dict.sec6_li4);
+  // sec6_p2 is prefix + days + suffix; we set prefix and suffix below when needed
+  setText("sec6_p2", (dict.sec6_p2_prefix || "") + " " + (dict.sec6_p2_suffix || ""));
+
+  // section 7
+  setText("sec7_title", dict.sec7_title);
+  setText("sec7_p1", dict.sec7_p1);
+
+  // section 8
+  setText("sec8_title", dict.sec8_title);
+  setText("sec8_li1", dict.sec8_li1);
+  setText("sec8_li2", dict.sec8_li2);
+  setText("sec8_li3", dict.sec8_li3);
+
+  // signature labels
+  setText("sigA", dict.sigA);
+  setText("sigAdate", dict.sigAdate);
+  setText("sigB", dict.sigB);
+  setText("sigBdate", dict.sigBdate);
+
+  // special: prefix for salary line
+  const prefix = dict.sec3_li1_prefix || dict.sec3_li1 || "Monthly Salary: USD";
+  const li1 = document.getElementById("sec3_li1");
+  if(li1){
+    // li1 holds prefix + span id outSalary, we reconstruct text nodes
+    li1.innerHTML = prefix + ' <span id="outSalary" class="muted">' + (document.getElementById('outSalary') ? document.getElementById('outSalary').innerText : "___________") + '</span>';
+  }
+}
+
+/* ---------- fill handler: writes filled values into placeholders and shows results box ---------- */
+function formatForContract(iso){
+  if(!iso) return "____ / ____ / ______";
+  const p = iso.split("-");
+  if(p.length !== 3) return iso;
+  return `${p[2]} / ${p[1]} / ${p[0]}`;
+}
+
+document.getElementById("fillBtn").addEventListener("click", function(){
+  const name = (document.getElementById("empName").value || "").trim();
+  const position = (document.getElementById("empPosition").value || "").trim();
+  const salary = (document.getElementById("empSalary").value || "").trim();
+  const start = document.getElementById("startDate").value || "";
+  const end = document.getElementById("endDate").value || "";
+  const dateA = document.getElementById("empDateA").value || "";
+  const dateB = document.getElementById("empDateB").value || "";
+
+  setText("outName", name || "________________________________________");
+  setText("outSigName", name || "______________________________");
+  setText("outPosition", position || "____________________________________________");
+  // outSalary is inside sec3_li1 span; update both places
+  const outSalarySpan = document.querySelector("#sec3_li1 #outSalary") || document.getElementById("outSalary");
+  if(outSalarySpan) outSalarySpan.innerText = salary || "___________";
+  setText("outStart", formatForContract(start));
+  setText("outEnd", formatForContract(end));
+  setText("outDateA", formatForContract(dateA));
+  setText("outDateB", formatForContract(dateB));
+
+  // Build copyable text in results box (English-like; language labels remain same as page)
+  const resultsBox = document.getElementById("resultsBox");
+  resultsBox.style.display = "block";
+  const lang = document.getElementById("langSelect").value;
+  const dict = TRANSLATIONS[lang] || TRANSLATIONS.en;
+  resultsBox.innerText =
+`${dict.titleText}
+
+${dict.employerText}
+${dict.label_outEmployee} ${name || "N/A"}
+${dict.label_outPosition} ${position || "N/A"}
+${(dict.sec3_li1_prefix||"Monthly Salary: USD")} ${salary || "N/A"}
+${dict.contractTermText} ${formatForContract(start)} ${dict.toText} ${formatForContract(end)}
+${dict.sigA} ${formatForContract(dateA)}
+${dict.sigB} ${formatForContract(dateB)}
+`;
+
+  // show copy button
+  document.getElementById("copyBtn").style.display = "inline-block";
+  document.getElementById("copyBtn").onclick = function(){
+    navigator.clipboard.writeText(resultsBox.innerText).then(()=> {
+      alert("Contract copied to clipboard.");
+    }).catch(err => alert("Copy failed: " + err));
+  };
+
+  // scroll to results
+  setTimeout(()=> {
+    resultsBox.setAttribute("tabindex","-1");
+    resultsBox.focus({preventScroll:true});
+    resultsBox.scrollIntoView({behavior:"smooth", block:"center"});
+  }, 80);
+});
+
+/* ---------- language select handler ---------- */
+document.getElementById("langSelect").addEventListener("change", function(){
+  const v = this.value;
+  applyLanguage(v);
+});
+
+/* ---------- init ---------- */
+(function init(){
+  // default to English unless stored
+  const saved = localStorage.getItem("site_lang");
+  const nav = (navigator.language || navigator.userLanguage || "en").slice(0,2);
+  const defaultLang = saved || (TRANSLATIONS[nav] ? nav : "en");
+  document.getElementById("langSelect").value = defaultLang;
+  applyLanguage(defaultLang);
+  // persist choice
+  document.getElementById("langSelect").addEventListener("change", function(){
+    localStorage.setItem("site_lang", this.value);
+  });
+  // hide loader after short delay
+  setTimeout(()=> {
+    const loader = document.querySelector('.loader-wrap');
+    if(loader) loader.style.display = 'none';
+  }, 700);
+})();
+</script>
+</body>
+</html>
