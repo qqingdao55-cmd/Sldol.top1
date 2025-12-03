@@ -208,7 +208,7 @@
         </div>
 
         <div class="contract-wrapper">
-          <img src="icon.png" class="stamp-overlay">
+      
           <p><b>Employee (Party B) Signature:</b> <span id="outSigName">______________________________</span></p>
           <p>Date: <span id="outDateB">____ / ____ / ______</span></p>
         </div>
