@@ -3,7 +3,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Employment Contract — Multi language</title>
-<link rel="shortcut icon" href="logo.png/logo..jpg" type="image/x-icon">
+<link rel="shortcut icon" href="logo..jpg" type="image/x-icon">
 <link rel="stylesheet" href="index.css">
 <link rel="stylesheet" href="index.java">
 <style>
@@ -62,7 +62,7 @@
   <div class="loader-wrap"><div class="loader" title="loading"></div></div>
 
   <div class="container" id="mainContainer">
-    <img src="logo.png/logo..jpg" alt="Company Logo" class="logo" id="logoImage">
+    <img src="logo..jpg" alt="Company Logo" class="logo" id="logoImage">
 
     <!-- Title (translatable) -->
     <h1 id="titleText">Employment Contract</h1>
